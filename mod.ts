@@ -22,8 +22,8 @@ interface migrations {
 // user stuff:
 export type User = {
 	proxyId: string,
-	permissions: string[],
-	displayName: string
+	displayName: string,
+	avatar: string
 }
 
 interface users {

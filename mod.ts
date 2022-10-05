@@ -2,8 +2,6 @@
 // There is no need to use them unless you are writing an alternative 
 // to the dropserver_app library.
 
-import type {ServerRequest} from "https://deno.land/std@0.106.0/http/server.ts";
-
 // migrations:
 export type migrationFunction = () => Promise<void>;
 
@@ -34,7 +32,7 @@ interface users {
 // Routes stuff:
 
 export interface Context {
-	req: ServerRequest
+	req: Deno.RequestEvent
 	params: Record<string, unknown>
 	url: URL
 	proxyId: string | null
@@ -62,30 +60,30 @@ export enum RouteType {
 	static = "static"
 }
 
-interface routeBase {
+interface RouteBase {
 	method: string,
 	path: Path,
 	auth: Auth,
 }
-export interface sandboxRoute extends routeBase {
+export interface SandboxRoute extends RouteBase {
 	type: RouteType.function,
 	handler: Handler
 }
 
-export type staticOpts = {
+export type StaticOpts = {
 	path: string
 }
 
-export interface staticRoute extends routeBase {
+export interface StaticRoute extends RouteBase {
 	type: RouteType.static,
-	opts: staticOpts
+	opts: StaticOpts
 }
 
-export type appRoute = sandboxRoute|staticRoute;
+export type AppRoute = SandboxRoute|StaticRoute;
 
-export type GetAppRoutesCallback = () => appRoute[];
+export type GetAppRoutesCallback = () => AppRoute[];
 
-interface appRoutes {
+interface AppRoutesIface {
 	setCallback(cb:GetAppRoutesCallback) :void
 }
 
@@ -96,5 +94,5 @@ export default interface libSupport {
 
 	migrations: migrations,
 	users: users,
-	appRoutes: appRoutes
+	appRoutes: AppRoutesIface
 }

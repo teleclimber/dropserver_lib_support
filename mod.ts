@@ -34,6 +34,16 @@ interface users {
 // App Routes:
 // App code creates app routes
 
+// Add RequestEvent to Deno since it was removed in Deno 2.
+declare global {
+	namespace Deno {
+		export interface RequestEvent {
+			readonly request: Request
+			respondWith: (r: Response | PromiseLike<Response>) => Promise<void>
+		}
+	}
+}
+
 export interface Context {
 	req: Deno.RequestEvent
 	params: Record<string, unknown>
